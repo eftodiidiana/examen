@@ -34,7 +34,6 @@ function Candidate() {
 
     const getCandidate= async ()=>{
         try {
-            const jobPostingId = jobPosting.jobPosting.id;
             const response = await fetch(`${SERVER}/api/jobPosting/${jobPostingId}/candidate`);
             let data = await response.json();
 
@@ -104,15 +103,14 @@ function Candidate() {
         resetValues();
     }
 
-    const addCandidate = async (newFood) => {
+    const addCandidate = async (newCandidate) => {
         try {
-            const jobPostingId = jobPosting.jobPosting.id;
             const response = await fetch(`${SERVER}/api/jobPosting/${jobPostingId}/candidate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newJobPosting)
+                body: JSON.stringify(newCandidate)
             });
             if(!response.ok) {
                 throw response
@@ -132,7 +130,7 @@ function Candidate() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(food)
+                body: JSON.stringify(candidate)
             });
             if(!response.ok) {
                 throw response
@@ -211,7 +209,7 @@ function Candidate() {
         return (
             <div>
                 <Button label="Anulare"  onClick={() => onHide()} className="p-button-danger p-1 w-3" />
-                <Button label={isEdit ? 'Salvare' : 'Adăugare'} className="p-button-success p-1 w-3" onClick={() => onAdd()}  />
+                <Button label={isEdit ? 'Salvare' : 'Adaugare'} className="p-button-success p-1 w-3" onClick={() => onAdd()}  />
             </div>
         );
     }
@@ -219,11 +217,10 @@ function Candidate() {
     const onShow=()=>{
        if(isEdit){
         setName(selectedRow.name);
-        if(selectedRow.description){
-            setDescription(selectedRow.description);
+        if(selectedRow.cv){
+            setCv(selectedRow.cv);
         }
 		setEmail(selectedRow.email);
-        setCategory(selectedRow.category);
        } 
        else{
         resetValues();
@@ -238,14 +235,14 @@ function Candidate() {
                 <Button label="Adaugare" icon="pi pi-plus" className="p-button-success p-button-sm text-right ml-2 mb-1" onClick={()=>{setShowAddDialog(true); setIsEdit(false)}}/>
             </div>
         </div>
-        <DataTable value={filteredList} responsiveLayout="scroll" emptyMessage="Lista de candidati este goală"   >
+        <DataTable value={filteredList} responsiveLayout="scroll" emptyMessage="Lista de candidati este goala"   >
             <Column field="name" header="Denumire" style={{ width: '25%' }}></Column>
             <Column field="cv" header="CV" style={{ width: '40%' }}></Column>
             <Column field="email" header="Email" style={{ width: '25%' }}></Column>
             <Column body={editRow} bodyStyle={{textAlign:'center'}} style={{ width: '15%' }}></Column>
             <Column body={deleteRow} style={{ width: '15%' }}></Column>
         </DataTable>
-        <Dialog header={isEdit? 'Editare candidat' : 'Adăugare candidat'} visible={showAddDialog} style={{ width: '30vw' }} footer={dialogAction()} onHide={() => onHide()} onShow={()=>onShow()}>
+        <Dialog header={isEdit? 'Editare candidat' : 'Adaugare candidat'} visible={showAddDialog} style={{ width: '30vw' }} footer={dialogAction()} onHide={() => onHide()} onShow={()=>onShow()}>
             <span className="p-float-label m-2 mb-4 mt-4">
                 <InputText id="name" className={'w-100 ' + (errors.name ? 'p-invalid' : '' )} value={name} onChange={(e) => setName(e.target.value)} />
                 <label htmlFor="name">Nume*</label>          

@@ -12,9 +12,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Messages } from 'primereact/messages';
 import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
-import { Calendar } from 'primereact/calendar';â
+import { Calendar } from 'primereact/calendar';
 import { classNames } from 'primereact/utils';
-import { OverlayPanel } from 'primereact/overlaypanel';
 
 const SERVER = 'http://localhost:3000'
 
@@ -31,8 +30,6 @@ function JobPosting() {
     const [showDemandDialog, setShowDemandDialog]=useState(false);
     const [demands, setDemands]=useState([]);
 
-    const [categoryFilter, setCategoryFilter]=useState(null);
-
     const [errors, setErrors] = useState({
         name: false,
         description: false,
@@ -45,7 +42,7 @@ function JobPosting() {
 
     const getJobPosting = async ()=>{
         try {
-            const response = await fetch(`${SERVER}/api/jobPosting/${userId}`);
+            const response = await fetch(`${SERVER}/api/jobPosting/${id}`);
             let data = await response.json();
 
             const deadlineAlert = { almostExpired: 0, expired: 0 }
@@ -74,7 +71,7 @@ function JobPosting() {
     }
 
     useEffect(()=>{
-        getJobPostingt();
+        getJobPosting();
     }, [])
 
     const deleteJobPosting = async (rowData)=>{
@@ -265,7 +262,7 @@ function JobPosting() {
         return (
             <div>
                 <Button label="Anulare"  onClick={() => onHide()} className="p-button-danger p-1 w-3" />
-                <Button label={isEdit ? 'Salvare' : 'Adăugare'} className="p-button-success p-1 w-3" onClick={() => onAdd()}  />
+                <Button label={isEdit ? 'Salvare' : 'Adaugare'} className="p-button-success p-1 w-3" onClick={() => onAdd()}  />
             </div>
         );
     }
@@ -336,12 +333,12 @@ function JobPosting() {
     <div className='p-3'>
         <div className='flex justify-content-between mb-3 pb-3 align-items-center border-bottom' >
             <h3 className='mr-4'>JobPosting</h3>
-            <Messages ref={messageExpirationDates}></Messages>
+            <Messages ref={messageDeadline}></Messages>
             <div>
                 <Button label="Adaugare" icon="pi pi-plus" className="p-button-success p-button-sm text-right ml-2 mb-1" onClick={()=>{setShowAddDialog(true); setIsEdit(false)}}/>
             </div>
         </div>
-        <DataTable value={filteredList} responsiveLayout="scroll" emptyMessage="Lista de JobPosting este goală"   >
+        <DataTable value={filteredList} responsiveLayout="scroll" emptyMessage="Lista de JobPosting este goala"   >
             <Column field="name" header="Denumire" style={{ width: '20%' }}></Column>
             <Column field="description" header="Descriere" style={{ width: '20%' }}></Column>
             <Column field="deadline" header="Deadline" style={{ width: '20%' }} body={deadlineBody}></Column>
@@ -349,7 +346,7 @@ function JobPosting() {
             <Column body={deleteRow} style={{ width: '15%' }}></Column>
             <Column body={cereri} style={{ width: '10%' }}></Column>
         </DataTable>
-        <Dialog header={isEdit? 'Editare JobPosting' : 'Adăugare JobPosting'} visible={showAddDialog} style={{ width: '30vw' }} footer={dialogAction()} onHide={() => onHide()} onShow={()=>onShow()}>
+        <Dialog header={isEdit? 'Editare JobPosting' : 'Adaugare JobPosting'} visible={showAddDialog} style={{ width: '30vw' }} footer={dialogAction()} onHide={() => onHide()} onShow={()=>onShow()}>
             <span className="p-float-label m-2 mb-4 mt-4">
                 <InputText id="name" className={'w-100 ' + (errors.name ? 'p-invalid' : '' )} value={name} onChange={(e) => setName(e.target.value)} />
                 <label htmlFor="name">Denumire</label>          
@@ -372,12 +369,6 @@ function JobPosting() {
                 <Column field="submission" header="Data cererii" style={{ width: '40%' }} body={submissionBody}></Column>
                 <Column body={onDeleteDemand} style={{ width: '20%' }}></Column>
             </DataTable>
-
-            <OverlayPanel ref={showUserInfoPanel} dismissable className='pl-2 pr-2'>
-                <h4 className='mb-4 border-bottom pb-3 text-center'>{demandCandidate.name} </h4>
-                <p><span className='fw-bold'>Email</span>: {demandCandidate.email}</p>
-                <p><span className='fw-bold'>CV</span>: {demandCandidate.cv }</p>
-            </OverlayPanel>
         </Dialog>
 
         <Toast ref={toastSuccess} />
