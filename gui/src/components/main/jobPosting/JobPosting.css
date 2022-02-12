@@ -1,0 +1,11 @@
+.good {
+    color: green;
+}
+
+.almostExpired{
+    color:orange
+}
+
+.expired {
+    color:red
+}
